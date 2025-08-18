@@ -1,18 +1,45 @@
 import express from "express";// Importing the express module to create a web server
 import dotenv from "dotenv"; // Importing dotenv to manage environment variables
 import { connectDB} from "./config/Database.js"; // Importing the connect function to establish a database connection
+
 dotenv.config(); // Loads environment variables from a .env file into process.env
+import Product from "./models/product.model.js"; // Importing the Product model to interact with the products collection in the database
 
 const app = express(); // Calls the express function to create an app instance
+app.use(express.json()); // Middleware to parse JSON request bodies
 
+
+
+// Home route to test the server
 app.get('/', (req, res) => {
   res.send('Welcome to the homepage!');
 });
 
-app.get("/products", (req, res) => {}); // Defines a route for GET requests to "/products"
+app.post ("/products", async (req, res) => {
+const product = req.body; // Extracts the product data from the request body from the user interface 
+
+if (! product.name || !product.price || !product.image) {
+  return res.status(400).json({ success: false, message: "Please fill all the fields" }); // Checks if all required fields are present
+
+}
+
+const newProduct = new Product(product); // Creates a new instance of the Product model with the provided data
+
+try {
+    await newProduct.save(); // Saves the new product to the database
+    res.status(201).json({ success: true, message: "Product created successfully", product: newProduct }); // Responds with a success message and the created product
+    
+    
+} catch (error) { 
+  console.error ("Error creating product:", error.message );
+  res.status (500).json({ success: false, message: "Internal server error" }); // Handles any errors that occur during the save operation
+  // 
+}
+});
 
 console.log(process.env.MONGO_URI); // Logs the MongoDB URI from environment variables
 
+//Postman Destop Application 
 
 app.listen (5000, () => {  // Starts the server and listens on port 5000
   connectDB() // Calls the connect function to establish a connection to the database
