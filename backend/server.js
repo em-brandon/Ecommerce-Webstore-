@@ -15,6 +15,16 @@ app.get('/', (req, res) => {
   res.send('Welcome to the homepage!');
 });
 
+app.get ("/api/products", async (req, res) => { // Route to fetch all products from the database
+  try {
+    const products = await Product.find(); // Fetches all products from the database
+    res.status(200).json({ success: true, products }); // Responds with a success message and the list of products
+  } catch (error) {
+    console.log("Error fetching products:")
+    res.status(500).json({ success: false, message: "Internal server error" }); // Handles any errors that occur during the fetch operation
+  }
+});
+
 app.post ("/api/products", async (req, res) => {
 const product = req.body; // Extracts the product data from the request body from the user interface 
 
@@ -38,9 +48,20 @@ try {
 }
 });
 
-console.log(process.env.MONGO_URI); // Logs the MongoDB URI from environment variables
+app.delete("/api/products/:id", async (req, res) => {
+const {id } = req.params; // Extracts the product ID from the request parameters
+  
 
-//Postman Destop Application 
+try {
+await Product.findByIdAndDelete(id); // Attempts to find and delete the product by its ID
+res.status(200).json({ success: true, message: "Product deleted successfully" }); // Responds with a success message if deletion is successful
+
+
+
+} catch (error) {
+res.status(500).json({ success: false, message: "Internal server error" }); // Handles any errors that occur during the deletion process
+}
+});
 
  
 
@@ -51,12 +72,14 @@ app.listen (5000, async () => {  // Starts the server and listens on port 5000
     // Connects to the MongoDB database using the connectDB function
     await // Attempts to connect to the database
     connectDB(); // Calls the connect function to establish a connection to the database
+    console.log(process.env.MONGO_URI); // Logs the MongoDB URI from environment variables
     console.log("Database connected successfully");
 
   } catch (error) {
   console.error("Database connection failed:", error.message); 
   }
-  
+
+
     console.log("Server is running on port 5000 http://localhost:5000");
 
 });
