@@ -15,8 +15,9 @@ app.get('/', (req, res) => {
   res.send('Welcome to the homepage!');
 });
 
-app.post ("/products", async (req, res) => {
+app.post ("/api/products", async (req, res) => {
 const product = req.body; // Extracts the product data from the request body from the user interface 
+
 
 if (! product.name || !product.price || !product.image) {
   return res.status(400).json({ success: false, message: "Please fill all the fields" }); // Checks if all required fields are present
@@ -41,8 +42,21 @@ console.log(process.env.MONGO_URI); // Logs the MongoDB URI from environment var
 
 //Postman Destop Application 
 
-app.listen (5000, () => {  // Starts the server and listens on port 5000
-  connectDB() // Calls the connect function to establish a connection to the database
+ 
+
+
+
+app.listen (5000, async () => {  // Starts the server and listens on port 5000
+  try {
+    // Connects to the MongoDB database using the connectDB function
+    await // Attempts to connect to the database
+    connectDB(); // Calls the connect function to establish a connection to the database
+    console.log("Database connected successfully");
+
+  } catch (error) {
+  console.error("Database connection failed:", error.message); 
+  }
+  
     console.log("Server is running on port 5000 http://localhost:5000");
 
 });
