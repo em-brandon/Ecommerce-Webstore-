@@ -63,9 +63,23 @@ res.status(500).json({ success: false, message: "Internal server error" }); // H
 }
 });
 
- 
+
+app.put ("/api/products/:id", async (req,res) => {
+  const { id  } = req.params; // Extracts the product ID from the request parameters
+  const product = req.body; // Extracts the updated product data from the request body 
 
 
+   const updatedProduct = await Product.findByIdAndUpdate(id, product, { new: true })
+  }catch (error) {
+    console.error("Error updating product:", error.message); // Logs any errors that occur during the update process
+    return res.status(500).json({ success: false, message: "Internal server error" }); // Responds with an error message if the update fails
+  }
+  res.status(200).json({ success: true, message: "Product updated successfully", product: updatedProduct }); // Responds with a success message and the updated product
+
+}catch (error) {
+  res.status(500).json({ success: false, message: "Internal server error" }); // Handles any errors that occur during the update process
+  console.error("Error updating product:", error.message); // Logs any errors that occur during the update process
+});
 
 app.listen (5000, async () => {  // Starts the server and listens on port 5000
   try {
