@@ -1,12 +1,13 @@
-import express from express;// Importing the Express framework
-import Product from "../product.model.js"; // Importing the Product model to interact with the products collection in the database
+import express from "express";// Importing the Express framework
+
+import Product from "../models/product.model.js"; // Importing the Product model to interact with the products collection in the database
 
 
 const router = express.Router(); // Creating a new router instance
 export default router; // Exporting the router to be used in other parts of the routerlication
 
 
-router.get ("/", async (req, res) => { // Routerto fetch all products from the database
+router.get ("/", async (req, res) => { // Router to fetch all products from the database
   try {
     const products = await Product.find(); // Fetches all products from the database
     res.status(200).json({ success: true, products }); // Responds with a success message and the list of products

@@ -2,9 +2,8 @@ import express from "express";// Importing the express module to create a web se
 import dotenv from "dotenv"; // Importing dotenv to manage environment variables
 import { connectDB} from "./config/Database.js"; // Importing the connect function to establish a database connection
 
-import productRoutes from "./models/routes/product.route.js"; // Importing product routes to handle product-related API endpoints
+import productRoutes from "./routes/product.route.js"; // Importing product routes to handle product-related API endpoints
  
-
 
 dotenv.config(); // Loads environment variables from a .env file into process.env
 import Product from "./models/product.model.js"; // Importing the Product model to interact with the products collection in the database
@@ -19,7 +18,7 @@ app.get('/', (req, res) => { // Defines a route for the root URL
   res.send('Welcome to the homepage!');
 });
 
-app.use("/api/products",productRoutes); // Uses the product routes for any requests to /api/products
+app.use("/api/products",product.Routes); // Uses the product routes for any requests to /api/products
 
 
 app.listen (5000, async () => {  // Starts the server and listens on port 5000
